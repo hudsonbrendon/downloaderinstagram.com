@@ -1,3 +1,792 @@
 {% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}Download Instagram Videos &amp; Photos{% endblock title %}
+
+{% block css %}
+{{ block.super }}
+<!-- Adding Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* Custom CSS for Instagram downloader */
+.header {
+  padding: 20px 0;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header__nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header__logo img {
+  max-width: 150px;
+}
+
+.header__lang {
+  position: relative;
+}
+
+.header__lang-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.header__lang-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 10;
+  margin-top: 5px;
+  width: 200px;
+}
+
+.header__lang-menu li {
+  padding: 5px 10px;
+}
+
+.header__lang-menu a {
+  text-decoration: none;
+  color: #333;
+}
+
+.form-block {
+  background: linear-gradient(135deg, #472d4e, #6c4675);
+  padding: 50px 20px;
+  color: white;
+}
+
+.form-block__wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pageTunerWrapper__items {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.pageTunerWrapper__item {
+  margin: 0 10px;
+}
+
+.pageTunerWrapper__item a {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.pageTunerWrapper__item a img {
+  margin-right: 5px;
+}
+
+.form {
+  margin: 20px 0;
+}
+
+.form__block {
+  display: flex;
+  background: white;
+  border-radius: 50px;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.form__input {
+  flex: 1;
+  border: none;
+  padding: 15px 20px;
+  font-size: 16px;
+  outline: none;
+}
+
+.form__block-btn {
+  display: flex;
+}
+
+.btn-paste, .btn-clear {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.btn-paste span, .btn-clear span {
+  margin-left: 5px;
+}
+
+.form__submit {
+  background: #28a745;
+  border: none;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 18px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.form__submit:hover {
+  background: #218838;
+}
+
+.info {
+  padding: 50px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.info__text-block {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.info-logo {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.background-border {
+  background: #f9f9f9;
+  padding: 30px 0;
+}
+
+.howto-title, .features-title, .why-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.howto__list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+.howto__element {
+  width: 30%;
+  margin-bottom: 20px;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.download-mobile-app {
+  padding: 50px 0;
+}
+
+.download-mobile-app .container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.download-mobile-app__image-container {
+  flex: 1;
+  min-width: 300px;
+}
+
+.download-mobile-app__info {
+  flex: 1;
+  padding: 20px;
+  min-width: 300px;
+}
+
+.download-mobile-app__info-button {
+  display: flex;
+  align-items: center;
+  background: #472d4e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.features {
+  padding: 50px 0;
+}
+
+.features__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.features__element {
+  width: 100%;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.features__element img {
+  max-width: 230px;
+  margin-right: 30px;
+}
+
+.features__element-info {
+  flex: 1;
+}
+
+.why__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.why__element {
+  width: 30%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.faq {
+  padding: 50px 20px;
+}
+
+.faq h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.faq__element {
+  margin-bottom: 20px;
+}
+
+.faq__element-question {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq__element-answer {
+  display: none;
+  padding: 15px 20px;
+  background: #f9f9f9;
+}
+
+footer {
+  background: #472d4e;
+  color: white;
+  padding: 30px 0;
+}
+
+footer nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+footer ul li {
+  margin-bottom: 10px;
+}
+
+footer ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.logo-wrapper {
+  width: 100%;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.years {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+  opacity: 0.7;
+}
+
+/* Card styles for feature elements */
+.feature-icon-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 230px;
+  height: 230px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 15px;
+  margin-right: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  font-size: 5rem;
+  color: #472d4e;
+}
+
+.feature-small-icon {
+  font-size: 1.2rem;
+  color: white;
+  margin-right: 8px;
+}
+
+.why-icon-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 132px;
+  height: 132px;
+  background: linear-gradient(135deg, #472d4e, #6c4675);
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.why-icon {
+  font-size: 3rem;
+  color: white;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .howto__element {
+    width: 100%;
+  }
+  
+  .why__element {
+    width: 100%;
+  }
+  
+  .features__element {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .features__element img {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
+  .feature-icon-card {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}
+</style>
+{% endblock css %}
+
+{% block content %}
+<!-- Header section is already in base.html so we'll start with the main content -->
+<section>
+  <div class="form-block">
+      <div class="form-block__wrapper">
+          <nav class="pageTunerWrapper">
+              <ul class="pageTunerWrapper__items">
+                  <li class="pageTunerWrapper__item">
+                      <a href="#">
+                          <i class="fa-solid fa-video feature-small-icon"></i>
+                          <span>Video</span>
+                      </a>
+                  </li>
+                  <li class="pageTunerWrapper__item">
+                      <a href="#">
+                          <i class="fa-solid fa-image feature-small-icon"></i>
+                          <span>Photo</span>
+                      </a>
+                  </li>
+                  <li class="pageTunerWrapper__item">
+                      <a href="#">
+                          <i class="fa-solid fa-film feature-small-icon"></i>
+                          <span>Reels</span>
+                      </a>
+                  </li>
+                  <li class="pageTunerWrapper__item">
+                      <a href="#">
+                          <i class="fa-solid fa-circle-play feature-small-icon"></i>
+                          <span>Story</span>
+                      </a>
+                  </li>
+                  <li class="pageTunerWrapper__item">
+                      <a href="#">
+                          <i class="fa-solid fa-star feature-small-icon"></i>
+                          <span>Highlights</span>
+                      </a>
+                  </li>
+              </ul>
+          </nav>
+          <h1 id="form-h1">
+              Instagram downloader
+          </h1>
+          <form class="form search-form" method="post">
+              {% csrf_token %}
+              <div class="form__block">
+                <label for="input">
+                  <input id="input" class="form__input" type="text" name="instagram_url" 
+                         placeholder="Paste link here">
+                </label>
+                <div class="form__block-btn">
+                  <button class="btn-paste" type="button">
+                    <i class="fa-solid fa-paste" style="color: #383838;"></i>
+                    <span>Paste</span>
+                  </button>
+                  <button class="btn-clear" type="reset">
+                    <i class="fa-solid fa-xmark" style="color: #4a4a4a;"></i>
+                    <span>Clear</span>
+                  </button>
+                </div>
+              </div>
+              <button type="submit" class="form__submit">
+                Download
+              </button>
+          </form>
+          <div class="search-result">
+              <!-- Results will be displayed here -->
+          </div>
+      </div>
+  </div>
+</section>
+
+<section class="info">
+  <div class="container">
+    <div class="info__text-block">
+      <h2 class="info__text-block-title">Download Instagram Videos &amp; Photos</h2>
+      <p class="info__text-block-text">With our Instagram downloader, you can download high-quality photos and videos without limits! Download Videos, Photos, Stories, Reels, and album posts with multiple mixed-media files with one-click simplicity. Our downloader ensures you get original images in their original sizes without resizing. Plus, our story saver feature ensures that your favorite stories don't get lost after 24 hours. It's easy to download them for later viewing. We also have a carousel download feature that allows you to download up to 10 pictures and videos with a single click. Just copy and paste the link, and our downloader takes care of the rest. Get the best quality Instagram downloads with our app!</p>
+    </div>
+    <img class="info-logo" src="{% static 'images/ilogo.png' %}" width="324" height="324" alt="Instagram downloader">
+  </div>
+</section>
+
+<div class="howto">
+  <div class="background-border">
+    <div class="container">
+      <h2 class="howto-title">How to download from Instagram?</h2>
+      <ul class="howto__list">
+        <li class="howto__element">
+          <h3 class="howto__element-title-h3">1. Copy the URL</h3>
+          <p class="howto__element-text">Open the Instagram app or website, go to the photo, video, reels, carousel, or IGTV you want to download. Copy the URL.</p>
+        </li>
+        <li class="howto__element">
+          <h3 class="howto__element-title-h3">2. Paste the link</h3>
+          <p class="howto__element-text">Return to our website, paste the link into the input field at the top of the page, and click the "Download" button to start downloading.</p>
+        </li>
+        <li class="howto__element">
+          <h3 class="howto__element-title-h3">3. Download</h3>
+          <p class="howto__element-text">Review the results and find the file you want to download. Click the "Download" button. Ready! The file is saved to your device.</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="download-mobile-app">
+  <div class="background-border">
+    <div class="container">
+      <div class="download-mobile-app__image-container">
+        <div class="feature-icon-card" style="width: 300px; height: 300px;">
+          <i class="fa-solid fa-mobile-screen-button" style="font-size: 8rem; color: #472d4e;"></i>
+        </div>
+      </div>
+      <div class="download-mobile-app__info">
+        <h3 class="download-mobile-app__info-title-h3">Download with mobile app</h3>
+        <p class="download-mobile-app__info-text">Download any photos, videos, reels, IGTV in one click! Our app provides fast, high-resolution downloads without watermarks, making it an ideal choice for downloading Instagram content.</p>
+        <button class="download-mobile-app__info-button">
+          <i class="fa-solid fa-download" style="margin-right: 8px;"></i>
+          <span>Install now</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="features">
+  <h2 class="features-title">Instagram Downloader</h2>
+  <div class="features__list">
+    <div class="features__element">
+      <div class="feature-icon-card">
+        <i class="fa-solid fa-video feature-icon"></i>
+      </div>
+      <div class="features__element-info">
+        <h3 class="features__element-title-h3">Instagram Video Download</h3>
+        <div class="features__element-text-block">
+          <p class="features__element-text">
+            We have made it easy to download videos from Instagram. All you have to do is insert the link and click the "Download" button. Our Video Downloader for Instagram is a revolutionary service that will save your favorite IG videos in the best quality. Our Video Downloader for Instagram is your perfect assistant for quick and easy access to the content you can't live without.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="features__element">
+      <div class="feature-icon-card">
+        <i class="fa-solid fa-image feature-icon"></i>
+      </div>
+      <div class="features__element-info">
+        <h3 class="features__element-title-h3">Instagram Photo Downloader</h3>
+        <div class="features__element-text-block">
+          <p class="features__element-text">
+            Swipe away all your worries about downloading Instagram photos with our Instagram photo downloader! With just one click away, you can get the highest image quality in the original photo link, no need for resizing. Get the highest quality photos with no fuss - get the best photos with one click!🖱️
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="features__element">
+      <div class="feature-icon-card">
+        <i class="fa-solid fa-film feature-icon"></i>
+      </div>
+      <div class="features__element-info">
+        <h3 class="features__element-title-h3">Instagram Reels Download</h3>
+        <div class="features__element-text-block">
+          <p class="features__element-text">
+            Save your favorite Instagram Reels quickly and easily with our Reels Downloader. Enjoy high-quality downloads at no cost, with no limits on the number of videos you can save. Simply copy the Reels URL, paste it into our downloader, and click download. It's that simple! Experience fast, secure, and hassle-free downloads today and enjoy your favorite Reels offline anytime, anywhere.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="features__element">
+      <div class="feature-icon-card">
+        <i class="fa-solid fa-images feature-icon"></i>
+      </div>
+      <div class="features__element-info">
+        <h3 class="features__element-title-h3">Carousel Download</h3>
+        <div class="features__element-text-block">
+          <p class="features__element-text">
+            Download Carousel posts from Instagram with ease! The Carousel Downloader for Instagram is your go-to tool for downloading those essential Instagram Carousel posts. Don't wait to save those must-have posts for offline use - this expert, online downloader takes care of it for you with ease. Try it out today, and never worry about missing a carousel post again!
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="features__element">
+      <div class="feature-icon-card">
+        <i class="fa-solid fa-circle-play feature-icon"></i>
+      </div>
+      <div class="features__element-info">
+        <h3 class="features__element-title-h3">Story Saver</h3>
+        <div class="features__element-text-block">
+          <p class="features__element-text">
+            Don't miss out on your favorite Instagram stories ever again! Our Instagram Story Downloader is the perfect solution to save, watch, and reuse stories even after their 24 hours limit. Download your favorite stories in just a few simple clicks - no app required! Plus, no time and no limit restrictions! Get ready to take control of your Instagram stories and make sure you never miss another one!
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="features__element">
+      <div class="feature-icon-card">
+        <i class="fa-solid fa-tv feature-icon"></i>
+      </div>
+      <div class="features__element-info">
+        <h3 class="features__element-title-h3">IGTV Download</h3>
+        <div class="features__element-text-block">
+          <p class="features__element-text">
+            Easily download IGTV videos with our fast and free IGTV Downloader. Save high-quality videos by simply copying the IGTV video URL, pasting it into our downloader, and clicking download. Enjoy unlimited downloads without any hassle. Our tool is secure and user-friendly, making it the perfect solution for offline viewing of your favorite IGTV content anytime, anywhere. Try it now!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="why">
+  <div class="background-border">
+    <div class="container">
+      <h2 class="why-title">Why Use Our Instagram Downloader?</h2>
+      <div class="why__list">
+        <div class="why__element">
+          <div class="why-icon-card">
+            <i class="fa-solid fa-infinity why-icon"></i>
+          </div>
+          <div class="why__element-info">
+            <h3 class="why__element-info-title-h3">Unlimited download</h3>
+            <div class="why__element-info-text">Watch and download photos, videos, reels, IGTV, Highlights in original resolution and quality without restrictions! Download as many videos and photos as you want every day.</div>
+          </div>
+        </div>
+        <div class="why__element">
+          <div class="why-icon-card">
+            <i class="fa-solid fa-user-secret why-icon"></i>
+          </div>
+          <div class="why__element-info">
+            <h3 class="why__element-info-title-h3">100% Anonymous</h3>
+            <div class="why__element-info-text">Stay completely anonymous when browsing and downloading from Instagram! Our service allows you to do this without taking any data from your Instagram accounts.</div>
+          </div>
+        </div>
+        <div class="why__element">
+          <div class="why-icon-card">
+            <i class="fa-solid fa-bolt why-icon"></i>
+          </div>
+          <div class="why__element-info">
+            <h3 class="why__element-info-title-h3">Fast, safe &amp; completely free</h3>
+            <div class="why__element-info-text">Our downloader works in any web browser (Chrome, Firefox, Opera) and on any device (computer, tablet, Android, and iOS phones). Our service is fully automated and free.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="faq" itemscope="" itemtype="https://schema.org/FAQPage">
+  <h2>FAQ</h2>
+  <div class="faq__list">
+    <div class="faq__element" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="background-border">
+        <div id="faq__element-answer-1" class="faq__element-question">
+          <h3 itemprop="name">Is there a limit to how many Instagram photos and videos I can download?</h3>
+          <i class="fa-solid fa-chevron-down" style="width: 24px; height: 24px; color: #472d4e;"></i>
+        </div>
+      </div>
+      <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <p itemprop="faq__element-text" class="faq__element-answer-1 faq__element-answer">Our service does not impose a strict limit on the number of downloads. However, we recommend using the tool responsibly and not overwhelming the server with excessive download requests.</p>
+      </div>
+    </div>
+    <div class="faq__element" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="background-border">
+        <div id="faq__element-answer-2" class="faq__element-question">
+          <h3 itemprop="name">What is an Instagram video downloader?</h3>
+          <i class="fa-solid fa-chevron-down" style="width: 24px; height: 24px; color: #472d4e;"></i>
+        </div>
+      </div>
+      <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <p itemprop="faq__element-text" class="faq__element-answer-2 faq__element-answer">An Instagram video downloader is an online tool that enables you to download photos, videos, and IGTV videos from Instagram for future use.</p>
+      </div>
+    </div>
+    <div class="faq__element" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="background-border">
+        <div id="faq__element-answer-3" class="faq__element-question">
+          <h3 itemprop="name">Can I download Instagram Stories using this tool?</h3>
+          <i class="fa-solid fa-chevron-down" style="width: 24px; height: 24px; color: #472d4e;"></i>
+        </div>
+      </div>
+      <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <p itemprop="faq__element-text" class="faq__element-answer-3 faq__element-answer">Yes, our Instagram downloader allows you to download Instagram Stories. Simply enter the URL of the Story you wish to download.</p>
+      </div>
+    </div>
+    <div class="faq__element" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <div class="background-border">
+        <div id="faq__element-answer-4" class="faq__element-question">
+          <h3 itemprop="name">Do I need to install any software to use the Instagram downloader?</h3>
+          <i class="fa-solid fa-chevron-down" style="width: 24px; height: 24px; color: #472d4e;"></i>
+        </div>
+      </div>
+      <div itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <p itemprop="faq__element-text" class="faq__element-answer-4 faq__element-answer">No, you do not need to install any software. Our Instagram downloader works entirely online, allowing you to download photos and videos directly from your browser.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+{{ block.super }}
+<script>
+  // Script for the Instagram downloader functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Paste button functionality
+    const pasteButton = document.querySelector('.btn-paste');
+    const inputField = document.getElementById('input');
+    const clearButton = document.querySelector('.btn-clear');
+    
+    if (pasteButton) {
+      pasteButton.addEventListener('click', function() {
+        navigator.clipboard.readText().then(function(text) {
+          inputField.value = text;
+          clearButton.style.display = 'flex';
+        });
+      });
+    }
+    
+    // Clear button functionality
+    if (clearButton) {
+      clearButton.addEventListener('click', function() {
+        inputField.value = '';
+        clearButton.style.display = 'none';
+      });
+    }
+    
+    // Input field event
+    if (inputField) {
+      inputField.addEventListener('input', function() {
+        if (inputField.value) {
+          clearButton.style.display = 'flex';
+        } else {
+          clearButton.style.display = 'none';
+        }
+      });
+    }
+    
+    // Language selector functionality
+    const langBtn = document.querySelector('.header__lang-btn');
+    const langMenu = document.querySelector('.header__lang-menu');
+    
+    if (langBtn && langMenu) {
+      langBtn.addEventListener('click', function() {
+        langMenu.style.display = langMenu.style.display === 'block' ? 'none' : 'block';
+      });
+      
+      document.addEventListener('click', function(e) {
+        if (!langBtn.contains(e.target) && !langMenu.contains(e.target)) {
+          langMenu.style.display = 'none';
+        }
+      });
+    }
+    
+    // FAQ accordion functionality
+    const faqQuestions = document.querySelectorAll('.faq__element-question');
+    
+    if (faqQuestions) {
+      faqQuestions.forEach(function(question) {
+        question.addEventListener('click', function() {
+          const answerId = question.getAttribute('id');
+          const answer = document.querySelector('.' + answerId);
+          
+          if (answer) {
+            if (answer.style.display === 'block') {
+              answer.style.display = 'none';
+            } else {
+              answer.style.display = 'block';
+            }
+          }
+        });
+      });
+    }
+  });
+</script>
+{% endblock javascript %}
 
 
